@@ -32,7 +32,7 @@ public class Quote {
 
     @Override
     public String toString(){
-        return String.format("%s\n%s\n", author, text);
+        return String.format("%s\n%s", author, text);
     }
 
 }

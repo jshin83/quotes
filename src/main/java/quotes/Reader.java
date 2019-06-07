@@ -26,9 +26,17 @@ public class Reader {
             JsonReader reader = new JsonReader(new FileReader(file));
             quotes = gson.fromJson(reader, Quote[].class);
         } catch (FileNotFoundException e) {
-            System.out.println("File not found - check file path");
+            throw new IllegalArgumentException("File not found - check file path");
         }
 
+        return quotes;
+    }
+
+    /**
+     * Getter for array of quotes
+     * @return String[] of quotes
+     */
+    public Quote[] getQuotes() {
         return quotes;
     }
 
