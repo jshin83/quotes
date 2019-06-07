@@ -5,7 +5,7 @@ in an array. User gets a random quote.
 #### To run :
 
 After you clone the repository
-+ in 'build.gradle' file, check that dependency is added: 
++ in 'build.gradle'gi file, check that dependency is added: 
 `implementation 'com.google.code.gson:gson:2.8.5'`
 + to run application, command is : `./gradlew run`
 
