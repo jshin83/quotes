@@ -1,6 +1,6 @@
 # Ignore Gradle project-specific cache directory
 .gradle
-
+.idea
 /out
 **/out
 
@@ -124,6 +124,8 @@ obj/
 **/.idea/sqlDataSources.xml
 **/.idea/dynamic.xml
 **/.idea/uiDesigner.xml
+**/.idea/workspace.xml
+
 
 # OS-specific files
 .DS_Store
