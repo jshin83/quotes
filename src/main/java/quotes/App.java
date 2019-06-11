@@ -10,7 +10,7 @@ public class App {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-//
+//      uncomment the bottom line for working file path
 //        Reader reader = new Reader("starwars.txt",
 //                "http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote");
 
