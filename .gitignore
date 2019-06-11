@@ -4,6 +4,10 @@
 /out
 **/out
 
+.idea/workspace.xml
+
+/out
+
 # Ignore Gradle build output directory
 build
 # Created by https://www.gitignore.io/api/java,macos,android,androidstudio
