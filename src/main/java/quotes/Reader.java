@@ -5,38 +5,110 @@ package quotes;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 
 public class Reader {
     //will hold our read-in file of quotes
-    private Quote[] quotes;
+    private Object[] quotes;
+    private StarWarsQuote starWarsQuote;
+    private String fileName;
+    private String url;
 
-    public Reader(String theFile){
-        this.quotes = readQuote(theFile);
+    public Reader(String fileName, String url){
+        this.fileName = fileName;
+        this.url = url;
+        quotes = null;
+    }
+
+    //Reads from API
+     String fetchFromAPI(){
+        //http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote
+        // file name - "src/main/resources/starwars.json"
+        try {
+            URL urlCon = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) urlCon.openConnection();
+
+            // this line of code actually goes to the internet!
+             BufferedReader reader = new BufferedReader(new InputStreamReader((con.getInputStream())));
+
+            // get json data in response
+            // use Gson to parse json string into StarWarsQuote object
+            Gson gson = new Gson();
+            starWarsQuote = gson.fromJson(reader, StarWarsQuote.class);
+
+            //cache quote
+            cacheQuote();
+
+            // return that text so user could do something with it
+            return starWarsQuote.starWarsQuote;
+        } catch (IOException e) {
+            //read from file instead
+            readQuoteFromFile();
+            return getRandomQuote();
+        }
+    }
+
+    //Helper - delegate file to internal file if the one user passes in doesn't exist
+    private void chooseFileToReadFrom() {
+        if (!new File(fileName).exists()) { //if starwars file doesn't exist, use internal default
+            fileName = "src/main/resources/recentquotes.json";
+        }
+    }
+
+    //Helper - write to file to cache online quotes
+    private void cacheQuote() throws IOException {
+        String quote = "";
+        File file = new File(fileName);
+        if(file.exists()){
+            quote += "\n";
+        }
+        FileWriter writer = new FileWriter(fileName, true);
+        writer.append(quote);
+        writer.append(starWarsQuote.starWarsQuote);
+
+        writer.close();
     }
 
     //Helper - reads in file and saves to array
-    private Quote[] readQuote(String file){
+    private void readQuoteFromFile(){
+        chooseFileToReadFrom();
         Gson gson = new Gson();
 
         try {
-            JsonReader reader = new JsonReader(new FileReader(file));
-            quotes = gson.fromJson(reader, Quote[].class);
+
+            File filepath = new File(fileName);
+            if(filepath.exists() && fileName.contains("starwars")) {
+                List<String> list = new ArrayList<>();
+                //add each quote to the list
+                Scanner scanner = new Scanner(filepath);
+                while(scanner.hasNextLine()) {
+                    String quote = scanner.nextLine();
+                    list.add(quote);
+                }
+                quotes = list.toArray();
+
+            } else  {
+                JsonReader reader = new JsonReader(new FileReader(filepath));
+                quotes = gson.fromJson(reader, Quote[].class);
+            }
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("File not found - check file path");
         }
-
-        return quotes;
     }
 
     /**
      * Getter for array of quotes
      * @return String[] of quotes
      */
-    public Quote[] getQuotes() {
+    public Object[] getQuotes() {
         return quotes;
     }
 

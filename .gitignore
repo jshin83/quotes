@@ -103,6 +103,7 @@ obj/
 # IntelliJ IDEA
 *.iws
 /out/
+.idea/workspace.xml
 
 # User-specific configurations
 **/.idea/libraries/

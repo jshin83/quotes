@@ -10,9 +10,13 @@ public class App {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        String file = "src/main/resources/recentquotes.json";
+//
+//        Reader reader = new Reader("starwars.txt",
+//                "http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote");
 
-        Reader reader = new Reader(file);
-        System.out.println(reader.getRandomQuote());
+        Reader reader = new Reader("starwars1.txt",
+                "doesnwork");
+        System.out.println(reader.fetchFromAPI());
+
     }
 }

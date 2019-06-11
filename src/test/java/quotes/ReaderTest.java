@@ -3,34 +3,41 @@
  */
 package quotes;
 
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ReaderTest {
     private Reader reader;
 
-    @Test (expected = IllegalArgumentException.class)
-    public void wrongFile() {
-        reader = new Reader("src/doesNotExist.json");
+    @Test
+    public void initStarWars() {
+        reader = new Reader("src/main/resources/starwars.txt", "");
+        assertNotNull("Reader has been initialized and should not be null", reader);
+        assertNull("quote array should be empty at just initialized reader", reader.getQuotes());
     }
 
-    @Before
-    public void init() {
-         reader = new Reader("src/main/resources/oneQuote.json");
-
+    @Test public void addOneQuote() {
+        reader = new Reader("src/main/resources/starwars.txt",
+                "http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote");
+        reader.fetchFromAPI();
+        assertNull("Successful pull from quote means array is not populated, array should be null",
+                reader.getQuotes());
     }
 
-    @Test public void quote() {
-        //there is literally only one quote in the file - george orwell
-        assertEquals("Should return the one quote contained in file",
-                "George Orwell\n" +
-                        " “His answer to every problem, every setback was “I will work harder!” —which he had adopted as his personal motto.” ",
-                reader.getRandomQuote());
+    @Test public void wrongApiUrlButFileExists() {
+        reader = new Reader("src/main/resources/starwars.txt",
+                "wrongUrl");
+        reader.fetchFromAPI();
+        assertNotNull("Wrong url means array should be populated, 1 expected",
+                reader.getQuotes());
     }
 
-    @Test public void checkSize() {
-        assertEquals("length of array should be 1",
-                1, reader.getQuotes().length);
+    @Test public void wrongUrlPlusNoFile() {
+        reader = new Reader("blah",
+                "boo");
+        reader.fetchFromAPI();
+        assertNotNull("wrong url and non-existing file means pull from internal, array should be populated",
+                reader.getQuotes());
     }
+
 }
